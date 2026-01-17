@@ -4,6 +4,7 @@ import './App.css'
 import SignIn from './pages/Signin'
 import Homepage from './pages/HomePage'
 import SignUp from "./pages/Signup"
+import ProtectedRoute from './Component/ProtexctedRoute'
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router'
 
@@ -15,9 +16,9 @@ function App() {
     <>
     <Router>
       <Routes>
-        <Route path="/" element={<Homepage/>} />
+        <Route path="/" element={<ProtectedRoute><Homepage /></ProtectedRoute>} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/Signup" element={<SignUp />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Router>
     </>

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { Link } from "react-router"
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router"
 import image from "../assets/images/image-cake-desktop.jpg"
+import { AuthContext } from "../Context/AuthContext";
+import {toast} from "react-toastify"
 
 const initialFormState = { email: "", password: ""};
 
@@ -9,9 +11,11 @@ export default function SignIn(){
     const [errors, setErrors] = useState({});
     const [submitError, setSubmitError] = useState("");
     const [loading, setLoading] = useState(false);
+    const { signIn } = useContext(AuthContext);
+    const navigate = useNavigate()
 
     const handleChange = ({ target:{ name, value}})=>{setFormData((prev)=>({...prev,[name]: value}));
-    setErrors((prev)=>({...prev,[name]:""}));
+    setErrors((prev)=>({...prev,[event.target.name]:""}));
 };
 
     const validateForm = () =>{
@@ -24,7 +28,7 @@ export default function SignIn(){
             newErrors.password = "password must be at least 6 characters";
         }
         setErrors(newErrors);
-        return object.keys(newErrors).length === 0;
+        return Object.keys(newErrors).length === 0;
     };
     const handleSubmit = async (e)=>{
         e.preventDefault();
@@ -33,6 +37,16 @@ export default function SignIn(){
         setFormData(initialFormState)
         console.log("sign in Data:", formData);
         setLoading(true)
+        try {
+            await signIn(formData)
+            toast.success("Signed in successfully!");
+            navigate("/")
+        } catch (error) {
+            setSubmitError(error.message || "sign in failed")
+            toast.danger("sign in failed, try again")        
+        }finally {
+            setLoading(false)
+        }
     };
 
     const renderInput = (label, name, type = "text")=> {
